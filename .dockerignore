@@ -1,0 +1,11 @@
+node_modules
+.next
+.git
+.env*
+!.env.example
+storage
+docs
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+deploy/.env

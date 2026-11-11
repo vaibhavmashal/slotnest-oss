@@ -1,0 +1,55 @@
+# The production stack: app, Postgres and Caddy (HTTPS via Let's Encrypt). scripts/selfhost.sh starts it with deploy/.env.
+# Secrets live in .env next to this file (from deploy/env.production.example), never in git.
+name: slotnest
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: slotnest
+      POSTGRES_DB: slotnest
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "slotnest"]
+      interval: 5s
+      retries: 20
+
+  app:
+    image: slotnest:${APP_TAG:-latest}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://slotnest:${POSTGRES_PASSWORD}@db:5432/slotnest
+    volumes:
+      - assets:/data/assets
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3100/api/health').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"]
+      interval: 30s
+      start_period: 60s
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      SITE_HOST: ${SITE_HOST:?set SITE_HOST in .env}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
+volumes:
+  pgdata:
+  assets:
+  caddy_data:
+  caddy_config:

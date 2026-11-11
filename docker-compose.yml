@@ -1,0 +1,20 @@
+name: slotnest
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: slotnest
+      POSTGRES_PASSWORD: slotnest
+      POSTGRES_DB: slotnest
+    ports:
+      - "5446:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  # Local email inbox for development: SMTP on 1026, web UI on http://localhost:8026
+  mail:
+    image: axllent/mailpit:latest
+    ports:
+      - "1026:1025"
+      - "8026:8025"
+volumes:
+  pgdata:

@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Embed demo</title>
+<style>body{font-family:system-ui;max-width:960px;margin:40px auto;padding:0 16px;background:#fff;color:#111}</style></head>
+<body>
+  <h1>Embed demo</h1>
+  <p><button data-slotnest-popup="/at20/fit-call">Book a fit call (popup)</button></p>
+  <h2>Inline</h2>
+  <div data-slotnest-url="/at20/fit-call"></div>
+  <script src="/embed.js" async></script>
+  <script>window.addEventListener("slotnest:booked", function (e) { console.log("booked", e.detail); });</script>
+</body>
+</html>
