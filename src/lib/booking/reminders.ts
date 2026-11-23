@@ -56,5 +56,5 @@ export type PlaceholderValues = Record<(typeof PLACEHOLDERS)[number], string>;
 
 /** Replace {{name}}-style placeholders; unknown ones are left as typed. */
 export function fill(template: string, values: PlaceholderValues): string {
-  return template.replace(/\{\{\s*([a-z_]+)\s*\}\}/g, (m, k: string) => (k in values ? values[k as keyof PlaceholderValues] : m));
+  return template.replace(/\{\{\s*([a-z_]+)\s*\}\}/g, (m, k: string) => (Object.hasOwn(values, k) ? values[k as keyof PlaceholderValues] : m));
 }

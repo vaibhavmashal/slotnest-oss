@@ -44,5 +44,8 @@ describe("reminder timing and wording", () => {
   it("fills placeholders and leaves unknown ones alone", () => {
     const v = { name: "Ann", event: "Intro", time: "Tue 10:00", host: "Sam", location: "", manage_link: "m", booking_link: "b" };
     expect(fill("Hi {{name}}, see you at {{ event }} ({{time}}). {{unknown}}", v)).toBe("Hi Ann, see you at Intro (Tue 10:00). {{unknown}}");
+    expect(fill("{{constructor}} {{ __proto__ }}", v)).toBe("{{constructor}} {{ __proto__ }}");
+    expect(fill("Location: {{location}}", v)).toBe("Location: ");
+    expect(fill("See you soon!", v)).toBe("See you soon!");
   });
 });
