@@ -32,7 +32,7 @@ export function outlookCalendarUrl(e: CalendarEntry): string {
   return `https://outlook.office.com/calendar/0/deeplink/compose?${q}`;
 }
 
-const text = (s: string) => s.replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+const text = (s: string) => s.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
 
 /** A one-event iCalendar file (METHOD:PUBLISH, so it's simply added, not treated as an invitation). */
 export function icsFile(e: CalendarEntry, uid: string, now = new Date()): string {

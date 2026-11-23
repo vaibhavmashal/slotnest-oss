@@ -24,4 +24,20 @@ describe("add to calendar", () => {
     expect(ics).toContain("METHOD:PUBLISH");
     expect(ics.endsWith("END:VCALENDAR\r\n")).toBe(true);
   });
+
+  it.each([
+    ["title", "SUMMARY"],
+    ["details", "DESCRIPTION"],
+    ["location", "LOCATION"],
+  ])("escapes semicolons in the .ics %s field", (field, property) => {
+    const ics = icsFile({ ...e, [field]: "Planning; review" }, "abc@slotnest");
+    expect(ics.split("\r\n")).toContain(`${property}:Planning\\; review`);
+  });
+
+  it("builds an .ics file without optional details or location", () => {
+    const ics = icsFile({ title: e.title, start: e.start, end: e.end }, "abc@slotnest");
+    expect(ics).toContain(`SUMMARY:${e.title}\r\n`);
+    expect(ics).not.toContain("DESCRIPTION:");
+    expect(ics).not.toContain("LOCATION:");
+  });
 });
